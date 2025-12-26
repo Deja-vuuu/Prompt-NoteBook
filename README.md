@@ -1,6 +1,7 @@
 # 提示词收藏夹 - Prompt Collection
 
 一个简约优雅的提示词收集网站,使用 Next.js 16 和 Tailwind CSS 构建。
+[page url](https://prompt-note-book.vercel.app/)
 
 ## ✨ 特性
 
