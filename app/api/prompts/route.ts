@@ -2,12 +2,30 @@ import { NextResponse } from 'next/server';
 import { getPrompts } from '@/lib/prompts';
 
 /**
- * GET /api/prompts - 获取所有提示词数据
+ * GET /api/prompts - 获取提示词数据（支持分页）
  */
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const prompts = await getPrompts();
-    return NextResponse.json(prompts);
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    
+    const allPrompts = await getPrompts();
+    
+    // 计算分页
+    const total = allPrompts.length;
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    const prompts = allPrompts.slice(start, end);
+    const hasMore = end < total;
+
+    return NextResponse.json({
+      items: prompts,
+      total,
+      page,
+      limit,
+      hasMore,
+    });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json(
